@@ -1,9 +1,15 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 let app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json({ type: 'application/json' }))
 
 app.post('/repos', function (req, res) {
+  console.log(req.body);
+
+  res.send('request received at post /repos');
   // TODO - your code here!
   // This route should take the github username provided
   // and get the repo information from the github API, then
@@ -17,7 +23,7 @@ app.get('/repos', function (req, res) {
 
 let port = 1128;
 
-app.listen(port, function() {
+app.listen(port, function () {
   console.log(`listening on port ${port}`);
 });
 
