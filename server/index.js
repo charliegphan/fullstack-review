@@ -14,14 +14,11 @@ app.post('/repos', function (req, res) {
   const user = req.body.term;
 
   getReposByUsername(user, (body) => {
-    const saveUser = JSON.parse(body);
-
-    save(saveUser, (err, repo) => {
+    const repos = JSON.parse(body);
+    save(repos, (err, repo) => {
+      console.log(repo);
       if (err) {
-        res.send(404);
         throw err;
-      } else if (repo.length > 0) {
-        res.sendStatus(302)
       } else {
         res.sendStatus(201);
       }
@@ -31,6 +28,7 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
+  console.log(req.body);
   fetch((err, repos) => {
     if (err) {
       throw err;
@@ -38,10 +36,6 @@ app.get('/repos', function (req, res) {
     res.send(repos);
   });
 });
-
-app.use(function (req, res, next) {
-  res.status(404).send("Sorry can't find that!")
-})
 
 const port = process.env.PORT || 1128;
 

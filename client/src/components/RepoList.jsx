@@ -7,6 +7,7 @@ const RepoList = (props) => (
     <div>
       {
         props.repos.map((repo, i) => {
+          console.log(repo);
           return <Repo repo={repo} key={i} />
         })
       }

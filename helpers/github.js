@@ -3,7 +3,7 @@ const config = process.env.TOKEN || require('../config.js').TOKEN
 
 let getReposByUsername = (user, cb) => {
   let options = {
-    url: `https://api.github.com/users/${user}`,
+    url: `https://api.github.com/users/${user}/repos`,
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${config}`

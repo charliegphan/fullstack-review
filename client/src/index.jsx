@@ -16,7 +16,6 @@ class App extends React.Component {
   }
 
   retrieveRepos() {
-
     $.get(`/repos`,
       (repos) => {
         this.setState({ repos: repos })
@@ -28,7 +27,6 @@ class App extends React.Component {
   }
 
   search(term) {
-    const port = process.env.PORT || 1128;
     $.post(`/repos`,
       { term: term },
       () => {
@@ -38,7 +36,7 @@ class App extends React.Component {
 
   render() {
     return (<div>
-      <h1>Github Fetcher</h1>
+      <h1>Github Repo Fetcher</h1>
       <Search onSearch={this.search.bind(this)} />
       <RepoList repos={this.state.repos} />
     </div>)

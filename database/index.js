@@ -9,39 +9,48 @@ let repoSchema = mongoose.Schema({
     required: true,
     unique: true
   }, // html_url - will use this for uniqueness
-  name: String, // login
-  picture: String
+  name: String,
+  owner: String
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (saveUser, cb) => {
-  Repo.find({ url: saveUser.html_url }, (err, repo) => {
-    console.log(saveUser);
-    if (err) {
-      console.log(err);
-    }
-
-    if (repo.length === 0 && saveUser.message === undefined) {
-      console.log('CREATING REPO');
-
-      const newRepo = new Repo({
-        url: saveUser.html_url,
-        name: saveUser.name,
-        picture: saveUser.avatar_url
-      })
-
-      newRepo.save((err, repo) => {
+let save = (repos, cb) => {
+  let counter = 0;
+  const reposPromise = repos.map(repo => {
+    // THIS IS ASYNCHRONOUS
+    // SEND RESPONSE BACK AFTER ALL REPOS HAVE BEEN ADDED
+    return new Promise((resolve, reject) => {
+      Repo.find({ url: repo.html_url }, (err, queriedRepos) => {
         if (err) {
-          throw err;
-        } else {
-          cb(err, repo);
+          reject(err);
         }
-      });
-    } else {
-      cb(err, repo);
-    }
+
+        if (queriedRepos.length === 0 && repos.message === undefined) {
+          const newRepo = new Repo({
+            url: repo.html_url,
+            name: repo.name,
+            owner: repo.owner.login
+          })
+
+          newRepo.save((err, repo) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(repo);
+            }
+          });
+        }
+      })
+    }).then((repo) => {
+      return repo;
+    })
   })
+
+  Promise.all(reposPromise).then((repo) => {
+    cb(null, repo)
+  })
+
 }
 
 const fetch = (cb) => {
@@ -50,7 +59,7 @@ const fetch = (cb) => {
       cb(err)
     }
     cb(err, repos);
-  }).sort({ name: 1 })
+  })
 }
 
 module.exports = {
