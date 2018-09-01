@@ -32,9 +32,21 @@ app.post('/repos', function (req, res) {
 
 app.get('/repos', function (req, res) {
   console.log('req recevied');
+  fetch((err, repos) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log(repos);
+    res.send(repos);
+  })
   // TODO - your code here!
   // This route should send back the top 25 repos
 });
+
+app.use(function (req, res, next) {
+  res.status(404).send("Sorry can't find that!")
+})
 
 let port = 1128;
 

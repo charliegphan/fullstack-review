@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-// const uniqueValidator = require('mongoose-unique-validator');
+
 mongoose.connect('mongodb://localhost/fetcher');
 
-// mongoose.createConnection('mongodb://localhost/fetcher');
 
 let repoSchema = mongoose.Schema({
   url: {
@@ -13,8 +12,6 @@ let repoSchema = mongoose.Schema({
   name: String, // login
   picture: String
 });
-
-// repoSchema.plugin(uniqueValidator);
 
 let Repo = mongoose.model('Repo', repoSchema);
 
@@ -50,7 +47,7 @@ let save = (saveUser, cb) => {
 const fetch = (cb) => {
   Repo.find({}, (err, repos) => {
     if (err) {
-      throw err;
+      cb(err)
     }
     cb(err, repos);
   });
