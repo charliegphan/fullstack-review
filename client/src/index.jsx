@@ -4,28 +4,33 @@ import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       repos: []
     }
+
+    this.retrieveRepos = this.retrieveRepos.bind(this);
+  }
+
+  retrieveRepos() {
+    $.get('http://localhost:1128/repos',
+      (repos) => {
+        this.setState({ repos: repos })
+      });
   }
 
   componentWillMount() {
-    $.get('http://localhost:1128/repos',
-      (repos) => {
-        this.setState({ repos: repos }, () => {
-          console.log(this.state.repos);
-        })
-      });
+    this.retrieveRepos();
   }
 
   search(term) {
     $.post('http://localhost:1128/repos',
       { term: term },
-      (success) => {
-        console.log(success);
+      () => {
+        this.retrieveRepos();
       });
   }
 

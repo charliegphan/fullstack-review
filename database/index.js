@@ -16,14 +16,14 @@ let repoSchema = mongoose.Schema({
 let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (saveUser, cb) => {
-
   Repo.find({ url: saveUser.html_url }, (err, repo) => {
+    console.log(saveUser);
     if (err) {
       console.log(err);
     }
 
-    if (repo.length === 0) {
-      console.log('repo does not exist');
+    if (repo.length === 0 && saveUser.message === undefined) {
+      console.log('CREATING REPO');
 
       const newRepo = new Repo({
         url: saveUser.html_url,
@@ -50,7 +50,7 @@ const fetch = (cb) => {
       cb(err)
     }
     cb(err, repos);
-  });
+  }).sort({ name: 1 })
 }
 
 module.exports = {
