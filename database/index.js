@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const URL = require('../config.js').URL
+const URL = process.env.URL || require('../config.js').URL
 
 mongoose.connect(URL);
-
 
 let repoSchema = mongoose.Schema({
   url: {
