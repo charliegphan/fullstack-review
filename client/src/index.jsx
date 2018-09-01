@@ -10,16 +10,21 @@ class App extends React.Component {
     this.state = {
       repos: []
     }
+  }
 
+  componentDidMount() {
+    $.get('http://localhost:1128/repos',
+      (success) => {
+        console.log(success);
+      });
   }
 
   search(term) {
-    console.log(`${term} was searched`);
-    // TODO
-    $.post('http://localhost:1128/repos', { term: term }, (res) => {
-      console.log(res);
-    })
-
+    $.post('http://localhost:1128/repos',
+      { term: term },
+      (success) => {
+        console.log(success);
+      });
   }
 
   render() {

@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const getReposByUsername = require('../helpers/github.js').getReposByUsername;
+const fetch = require('../database/index').fetch;
 const save = require('../database/index').save;
 
 let app = express();
@@ -14,14 +15,23 @@ app.post('/repos', function (req, res) {
 
   getReposByUsername(user, (body) => {
     const saveUser = JSON.parse(body);
-    save(saveUser, (repo) => {
-      console.log(repo);
+
+    save(saveUser, (err, repo) => {
+      if (err) {
+        res.send(404);
+        throw err;
+      } else if (repo.length > 0) {
+        res.sendStatus(302)
+      } else {
+        res.sendStatus(201);
+      }
     })
-    res.sendStatus(201);
+
   })
 });
 
 app.get('/repos', function (req, res) {
+  console.log('req recevied');
   // TODO - your code here!
   // This route should send back the top 25 repos
 });
