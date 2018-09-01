@@ -16,7 +16,8 @@ class App extends React.Component {
   }
 
   retrieveRepos() {
-    $.get('http://localhost:1128/repos',
+
+    $.get(`/repos`,
       (repos) => {
         this.setState({ repos: repos })
       });
@@ -27,7 +28,8 @@ class App extends React.Component {
   }
 
   search(term) {
-    $.post('http://localhost:1128/repos',
+    const port = process.env.PORT || 1128;
+    $.post(`/repos`,
       { term: term },
       () => {
         this.retrieveRepos();
